@@ -1,0 +1,74 @@
+<script>
+// Hacer que la función buscarHistorial esté disponible globalmente
+window.buscarHistorial = function buscarHistorial() {
+  // Prevenir el comportamiento por defecto del formulario
+  if (event) event.preventDefault();
+
+  const cedula = document.getElementById("searchCedula").value.trim();
+  if (!cedula) {
+    alert("Por favor, ingrese una cédula válida.");
+    return;
+  }
+
+  // Llama a la función en el servidor para obtener el historial
+  google.script.run
+    .withSuccessHandler((data) => {
+      renderTable(data); // Muestra los datos en la tabla
+    })
+    .withFailureHandler((error) => {
+      alert(`Error: ${error.message}`);
+    })
+    .getHistorialPorCedula(cedula); // Llama a la función en el servidor
+};
+
+// Manejar el evento de envío del formulario para evitar recarga
+document.getElementById("ForPagMonitoreo").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevenir recarga de la página
+  buscarHistorial(); // Ejecutar la búsqueda
+});
+
+// Función para filtrar por mes
+document.getElementById("filterDate").addEventListener("change", function () {
+  const cedula = document.getElementById("searchCedula").value.trim();
+  const fecha = document.getElementById("filterDate").value; // Formato YYYY-MM
+
+  if (!cedula) {
+    alert("Por favor, ingrese una cédula antes de filtrar.");
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler((data) => {
+      renderTable(data); // Muestra los datos filtrados en la tabla
+    })
+    .withFailureHandler((error) => {
+      alert(`Error: ${error.message}`);
+    })
+    .getHistorialPorCedulaYMes(cedula, fecha); // Llama a la función en el servidor con la cédula y el mes
+});
+
+// Función para renderizar la tabla con los datos obtenidos
+function renderTable(data) {
+  console.log(data); // Agrega esto para verificar qué datos se están recibiendo
+  const tableBody = document.getElementById("tableBody");
+  tableBody.innerHTML = ""; // Limpia la tabla
+
+  if (data.length === 0) {
+    const row = tableBody.insertRow();
+    const cell = row.insertCell(0);
+    cell.colSpan = 5;
+    cell.textContent = "No se encontraron registros.";
+    cell.className = "text-center";
+    return;
+  }
+
+  data.forEach((row) => {
+    const newRow = tableBody.insertRow();
+    newRow.insertCell(0).textContent = row.documento;
+    newRow.insertCell(1).textContent = row.nombre;
+    newRow.insertCell(2).textContent = row.jefeDirecto;
+    newRow.insertCell(3).textContent = row.fechaIngreso;
+    newRow.insertCell(4).textContent = row.horaIngreso;
+  });
+}
+</script>

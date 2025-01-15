@@ -1,0 +1,51 @@
+<script>
+  // Enfocar el campo de texto al cargar la página
+  window.onload = function () {
+    const inputCedula = document.getElementById("txtDocumento");
+    inputCedula.focus();
+
+    // Detectar cuando el lector de código de barras o el usuario presiona Enter
+    inputCedula.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Evita el comportamiento predeterminado de "Enter"
+        registrarIngreso(); // Llama automáticamente a la función de registro
+      }
+    });
+  };
+
+  // Capturar el evento de envío del formulario manualmente (para el botón Registrar Ingreso)
+  document.getElementById("ForPagPtimaria").addEventListener("submit", function (event) {
+    event.preventDefault(); // Evita que el formulario recargue la página
+    registrarIngreso(); // Llama a la función de registro
+  });
+
+  // Función para registrar ingreso
+  function registrarIngreso() {
+    const cedula = document.getElementById("txtDocumento").value.trim();
+    if (!cedula) {
+      alert("Por favor, ingrese una cédula válida.");
+      return;
+    }
+
+    // Llamada al servidor de Google Apps Script para registrar el ingreso
+    google.script.run
+      .withSuccessHandler((mensaje) => {
+        alert(mensaje); // Muestra mensaje de éxito
+        document.getElementById("txtDocumento").value = ""; // Limpia el campo
+        document.getElementById("txtDocumento").focus(); // Vuelve a enfocar el campo
+      })
+      .withFailureHandler((error) => {
+        alert(`Error: ${error.message}`); // Muestra mensaje de error
+      })
+      .registrarIngresogs(cedula); // Llama a la función en el servidor
+  }
+
+  // Función para redirigir a la página de monitoreo
+  function goToMonitor() {
+    const baseUrl = "https://script.google.com/a/macros/parqueexplora.org/s/AKfycbyV1HR2WnKfATyafWpNL_3QqbJaQze5EQCLmo95jZ1xHNxurAYM3swxHeJerv4HvRGDKg/exec";
+    const fullUrl = `${baseUrl}?page=PagSecundaria`;
+    console.log(`Redirigiendo a: ${fullUrl}`); // Verifica la URL en consola
+    window.open(fullUrl, "_blank"); // Abre la página de monitoreo en una nueva pestaña
+  }
+
+</script>

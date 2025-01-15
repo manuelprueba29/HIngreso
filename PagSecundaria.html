@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitorear Ingreso</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <?!= include('style2.html'); ?> <!-- Incluye los estilos externos -->
+</head>
+
+<body>
+  <section class="d-flex justify-content-center align-items-center vh-100">
+    <div class="p-4 border rounded" style="max-width: 800px; background-color: #f8f9fa;">
+      <form id="ForPagMonitoreo" name="ForPagMonitoreo" class="needs-validation" novalidate>
+        <h2 class="text-center mb-4">Monitorear Ingreso</h2>
+
+        <!-- Campo para ingresar la cédula -->
+        <div class="form-group mb-3">
+          <label for="searchCedula">Cédula:</label>
+          <input type="text" id="searchCedula" class="form-control" placeholder="Ingrese la ceédula" name="cedula">
+        </div>
+
+        <!-- Campo para filtrar por mes -->
+        <div class="form-group mb-3">
+          <label for="filterDate">Fecha:</label>
+          <input type="month" id="filterDate" class="form-control" placeholder="Seleccione el mes" name="fecha" >
+        </div>
+
+        <!-- Botón para buscar -->
+        <div class="form-group mb-3">
+          <button id="btnBuscar" type="button" class="btn btn-primary btn-block" onclick="buscarHistorial()">Buscar</button>
+        </div>
+
+        <!-- Tabla para mostrar los resultados -->
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Documento</th>
+              <th>Nombre</th>
+              <th>Jefe Directo</th>
+              <th>Fecha Ingreso</th>
+              <th>Hora Ingreso</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Los datos dinámicos se insertarán aquí -->
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </section>
+
+ <?!= include('jspagina2.html'); ?> <!-- Incluye los scripts externos -->
+</body>
+
+</html>
